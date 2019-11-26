@@ -41,12 +41,56 @@ echo "Téléchargement en cours ... "
 wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
 pushd $LFS/sources
 if [ md5sum -c md5sums | tail -n 1 != "Success" ] && [ md5sum -c md5sums | tail -n 1 == "Réussi" ]
-echo "Les sommes de contrôles md5 ne correspondent pas !"
-popd
-exit 1
+    echo "Les sommes de contrôles md5 ne correspondent pas !" ;
+    popd ;
+    exit 1
 fi
 
 popd
 
 # ------------- RÉPERTOIRE TOOLS ----------
 mkdir -v $LFS/tools
+ln -sv $LFS/tools /
+
+# ------------ UTILISATEUR LFS ------------
+
+groupadd lfs
+useradd -s /bin/bash -g lfs -m -k /dev/null lfs
+echo "Définissez un mot de passe pour l'utilisateur LFS :"
+passwd lfs
+chown -v lfs $LFS/tools
+chown -v lfs $LFS/sources
+su - lfs
+
+cat > ~/.bash_profile << "EOF"
+exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+EOF
+
+cat > ~/.bashrc << "EOF"
+set +h
+umask 022
+LFS=/mnt/lfs
+LC_ALL=POSIX
+LFS_TGT=$(uname -m)-lfs-linux-gnu
+PATH=/tools/bin:/bin:/usr/bin
+export LFS LC_ALL LFS_TGT PATH
+export LFS="/mnt/lfs"
+EOF
+
+
+while not_ok do;
+    echo "Combien avez vous de coeurs sur votre processeur ? (Tapez 1 si vous ne savez pas) ";
+    read nb_cores;
+
+    re='^[0-9]+$';
+    if ! [[ $nb_cores =~ $re ]] ; then
+        echo "Ceci n'est pas un nombre entier !";
+        continue
+    fi
+    
+done;
+
+echo "export MAKEFLAGS='-j $nb_cores'" >> ~/.bashrc
+
+
+source ~/.bash_profile
