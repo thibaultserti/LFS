@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# ------ PRÉREQUIS --------------
 echo "Bienvenue dans l'assistant d'installation de Linux From Scratch LFS"
 if [ `bash version-check.sh | tail -n 1 | cut -d ' ' -f3-` != "OK" ]; 
 then
@@ -7,7 +7,7 @@ echo "Le système hôte n'a pas les prérequis nécessaires ! Vous pouvez lancez
 exit 1
 fi
 echo "Choisissez la partition d'installation de LFS"
-
+# ------ PARTITIONNEMENT ---------
 isNotOk=false
 while is_not_ok;
 do
@@ -24,4 +24,25 @@ fi
 
 mkfs -v -t ext4 $partition
 echo "export LFS=/mnt/lfs" >> $HOME/.bashrc
+export LFS=/mnt/lfs
+
+mkdir -pv $LFS
+mount -v -t ext4 partition $LFS
+
+
+# ------- PAQUETS ------------
+echo "Nous allons maintenant télécharger les paquets"
+
+mkdir -v $LFS/sources
+chmod -v a+wt $LFS/sources
+echo "Téléchargement en cours ... "
+wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
+pushd $LFS/sources
+if [ md5sum -c md5sums | tail -n 1 != "Success" ] && [ md5sum -c md5sums | tail -n 1 == "Réussi" ]
+echo "Les sommes de contrôles md5 ne correspondent pas !"
+popd
+exit 1
+fi
+
+popd
 
