@@ -51,7 +51,7 @@ chmod -v a+wt $LFS/sources
 echo "Téléchargement en cours ... "
 wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
 pushd $LFS/sources
-if [ md5sum -c md5sums | tail -n 1 != "Success" ] && [ md5sum -c md5sums | tail -n 1 != "Réussi" ];
+if [ `(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)` != "Success" ] && [ `(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)` != "Réussi" ];
 then 
     echo "Les sommes de contrôles md5 ne correspondent pas !" ;
     popd ;
@@ -72,13 +72,13 @@ echo "Définissez un mot de passe pour l'utilisateur LFS :"
 passwd lfs
 chown -v lfs $LFS/tools
 chown -v lfs $LFS/sources
-su - lfs
 
-cat > ~/.bash_profile << "EOF"
+
+sudo lfs -c 'cat > ~/.bash_profile << "EOF"
 exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
-EOF
+EOF'
 
-cat > ~/.bashrc << "EOF"
+sudo lfs -c 'cat > ~/.bashrc << "EOF"
 set +h
 umask 022
 LFS=/mnt/lfs
@@ -87,7 +87,7 @@ LFS_TGT=$(uname -m)-lfs-linux-gnu
 PATH=/tools/bin:/bin:/usr/bin
 export LFS LC_ALL LFS_TGT PATH
 export LFS="/mnt/lfs"
-EOF
+EOF'
 
 
 while [ true ];
@@ -105,7 +105,7 @@ do
     
 done
 
-echo "export MAKEFLAGS='-j $nb_cores'" >> ~/.bashrc
+echo "export MAKEFLAGS=-j $nb_cores" >> /home/lfs/.bashrc
 
 
-source ~/.bash_profile
+#su lfs -c 'source ~/.bash_profile'
