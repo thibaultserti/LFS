@@ -51,7 +51,7 @@ chmod -v a+wt $LFS/sources
 echo "Téléchargement en cours ... "
 wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
 pushd $LFS/sources
-if [ md5sum -c md5sums | tail -n 1 != "Success" ] && [ md5sum -c md5sums | tail -n 1 == "Réussi" ];
+if [ md5sum -c md5sums | tail -n 1 != "Success" ] && [ md5sum -c md5sums | tail -n 1 != "Réussi" ];
 then 
     echo "Les sommes de contrôles md5 ne correspondent pas !" ;
     popd ;
@@ -90,7 +90,8 @@ export LFS="/mnt/lfs"
 EOF
 
 
-while [ true ] do;
+while [ true ];
+do
     echo "Combien avez vous de coeurs sur votre processeur ? (Tapez 1 si vous ne savez pas) ";
     read nb_cores;
 
@@ -102,7 +103,7 @@ while [ true ] do;
         break;
     fi
     
-done;
+done
 
 echo "export MAKEFLAGS='-j $nb_cores'" >> ~/.bashrc
 
