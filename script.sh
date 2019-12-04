@@ -106,7 +106,7 @@ do
     
 done
 
-echo "export MAKEFLAGS=-j $nb_cores" >> /home/lfs/.bashrc
+echo "export MAKEFLAGS='-j $nb_cores'" >> /home/lfs/.bashrc
 
 
 #su lfs -c 'source ~/.bash_profile'
