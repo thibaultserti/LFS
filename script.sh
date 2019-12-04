@@ -50,6 +50,7 @@ mkdir -v $LFS/sources
 chmod -v a+wt $LFS/sources
 echo "Téléchargement en cours ... "
 wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
+cp md5sums $LFS/sources
 pushd $LFS/sources
 if [ `(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)` != "Success" ] && [ `(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)` != "Réussi" ];
 then 
@@ -74,11 +75,11 @@ chown -v lfs $LFS/tools
 chown -v lfs $LFS/sources
 
 
-sudo lfs -c 'cat > ~/.bash_profile << "EOF"
+su lfs -c 'cat > ~/.bash_profile << "EOF"
 exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
 EOF'
 
-sudo lfs -c 'cat > ~/.bashrc << "EOF"
+su lfs -c 'cat > ~/.bashrc << "EOF"
 set +h
 umask 022
 LFS=/mnt/lfs
