@@ -90,14 +90,16 @@ export LFS="/mnt/lfs"
 EOF
 
 
-while not_ok do;
+while [ true ] do;
     echo "Combien avez vous de coeurs sur votre processeur ? (Tapez 1 si vous ne savez pas) ";
     read nb_cores;
 
     re='^[0-9]+$';
     if ! [[ $nb_cores =~ $re ]] ; then
         echo "Ceci n'est pas un nombre entier !";
-        continue
+    
+    else
+        break;
     fi
     
 done;
