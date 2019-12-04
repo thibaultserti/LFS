@@ -8,21 +8,31 @@ echo "Le système hôte n'a pas les prérequis nécessaires ! Vous pouvez lancez
 exit 1
 fi
 
+`bash version-check.sh`
+echo "Êtes vous sûr de vouloir continuer (o/N) ?"
+read $val
+if [ $val != "o" ];
+then
+exit 1
+fi
+
 # ------ PARTITIONNEMENT ---------
 echo "Choisissez la partition d'installation de LFS"
 is_not_ok=false
-while is_not_ok;
+while [ is_not_ok ];
 do
 sudo fdisk -l | tail -n +10 | head -n -2 
 echo "Quelle partition voulez vous utiliser pour LFS ? (ATTENTION : toutes les données déjà présentes sur le disque seront effacées ! (Taper /dev/sdxx)"
-read partition ;
-done
-
-if [ partition != "/dev/sd"* ]
+read partition
+if ! [[ $partition ~= /dev/sd[a-f][1-9] ]];
 then
 echo "Partition invalide !"
 exit 1
 fi
+
+done
+
+
 
 mkfs -v -t ext4 $partition
 echo "export LFS=/mnt/lfs" >> $HOME/.bashrc
