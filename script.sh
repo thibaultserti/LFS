@@ -10,11 +10,11 @@ fi
 
 # ------ PARTITIONNEMENT ---------
 echo "Choisissez la partition d'installation de LFS"
-isNotOk=false
+is_not_ok=false
 while is_not_ok;
 do
 sudo fdisk -l | tail -n +10 | head -n -2 
-echo "Quel partition voulez vous utiliser pour LFS ? (ATTENTION : toutes les données déjà présentes sur le disque seront effacées ! (Taper /dev/sdxx)"
+echo "Quelle partition voulez vous utiliser pour LFS ? (ATTENTION : toutes les données déjà présentes sur le disque seront effacées ! (Taper /dev/sdxx)"
 read partition ;
 done
 
