@@ -39,8 +39,8 @@ echo "export LFS=/mnt/lfs" >> $HOME/.bashrc
 export LFS=/mnt/lfs
 
 mkdir -pv $LFS
-sleep(1)
-mount -v -t ext4 partition $LFS
+sleep 1;
+mount -v -t ext4 $partition $LFS
 
 
 # ------- PAQUETS ------------
