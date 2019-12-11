@@ -124,6 +124,10 @@ echo "Compilation de BINUTILS ...
 (le temps renvoyé à la fin est une unité caractéristique appelé SBU qui servira d'indicateur pour le temps de compilation des paquets suivants)"
 su lfs -c 'tar -xf binutils-2.32.tar.xz'
 cd binutils-2.32/
+
+mkdir -v build
+cd build/
+
 su lfs -c 'time { 
     ../configure --prefix=/tools
     --with-sysroot=$LFS
@@ -134,7 +138,8 @@ su lfs -c 'time {
     && make 
     && make install; }'
 
-rm  -rf binutils-2.32$
+cd $LFS/source/
+rm -rf binutils-2.32$
 
 # GCC
 
@@ -204,6 +209,18 @@ su lfs -c '
     && make
     && make install'
 
+cd $LFS/sources/
 rm -rf gcc-9.2.0/
 rm -rf mpfr/ gmp/ mpc/
 
+# Linux Headers
+
+echo "Installation de Linux API Headers ..."
+
+su lfs -c 'tar -xf'
+su lfs -c 'make mrproper'
+su lfs -c 'make INSTALL_HDR_PATH=dest headers_install'
+su lfs -c 'cp -rv dest/include/* /tools/include'
+
+cd $LFS/sources/
+rm -rf linux-5.2.8/
