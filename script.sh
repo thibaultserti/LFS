@@ -138,7 +138,7 @@ su lfs -c 'time {
     && make 
     && make install; }'
 
-cd $LFS/source/
+cd $LFS/sources/
 rm -rf binutils-2.32$
 
 # GCC
@@ -216,6 +216,7 @@ rm -rf mpfr/ gmp/ mpc/
 # LINUX HEADERS
 
 echo "Installation de Linux API Headers ..."
+echo "Temps de compilation : 0.1 SBU"
 
 su lfs -c 'tar -xf linux-5.2.8.tar.xz'
 cd linux-5.2.8/
@@ -228,12 +229,14 @@ rm -rf linux-5.2.8/
 
 # GLIBC
 
-echo "Compilation de Glibc ..."
+echo "Compilation de GLIBC..."
 
 su lfs -c 'tar -xf glibc-2.30.tar.xz'
 cd glibc-2.30/
 su lfs -c 'mkdir -v build'
 cd build/
+
+echo "Temps de compilation : 4.8 SBU"
 
 su lfs -c '
     ../configure                            
@@ -265,12 +268,14 @@ rm -rf glibc-2.30/
 
 # LIBSTDC++
 
-echo "Compilation de Libstdc++ ..."
+echo "Compilation de LIBSTDC++ ..."
 su lfs -c 'tar -xf gcc-9.2.0.tar.xz'
 cd gcc-9.2.0/
 
 su lfs -c 'mkdir -v build'
 cd build/
+
+echo "Temps de compilation : 0.5 SBU"
 
 su lfs -c '
     ../libstdc++-v3/configure
@@ -283,4 +288,38 @@ su lfs -c '
     --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/9.2.0
     && make
     && make install'
-    
+
+
+cd $LFS/sources/
+rm -rf gcc-9.2.0/
+
+# Binutils 2
+
+echo "Compilation de BINUTILS ..."
+su lfs -c 'tar -xf binutils-2.32.tar.xz'
+cd binutils-2.32/
+
+su lfs -c 'mkdir -v build'
+cd build/
+
+echo "Temps de compilation : 1.1 SBU"
+
+CC=$LFS_TGT-gcc
+AR=$LFS_TGT-ar
+RANLIB=$LFS_TGT-ranlib
+su lfs -c '
+    ../configure                   
+    --prefix=/tools            
+    --disable-nls              
+    --disable-werror           
+    --with-lib-path=/tools/lib
+    --with-sysroot
+    && make
+    && make install'
+
+su lfs -c 'make -C ld clean'
+su lfs -c 'make -C ld LIB_PATH=/usr/lib:/lib'
+su lfs -c 'cp -v ld/ld-new /tools/bin'
+
+cd $LFS/sources/
+rm -rf binutils-2.32/
