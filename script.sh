@@ -128,7 +128,7 @@ cd binutils-2.32/
 su lfs -c 'mkdir -v build'
 cd build/
 
-su lfs -c 'time { 
+su lfs -c "time { 
     ../configure --prefix=/tools
     --with-sysroot=$LFS
     --with-lib-path=/tools/lib
@@ -136,7 +136,7 @@ su lfs -c 'time {
     --disable-nls
     --disable-werror
     && make 
-    && make install; }'
+    && make install; }"
 
 cd $LFS/sources/
 rm -rf binutils-2.32$
@@ -238,7 +238,7 @@ cd build/
 
 echo "Temps de compilation : 4.8 SBU"
 
-su lfs -c '
+su lfs -c "
     ../configure                            
     --prefix=/tools                    
     --host=$LFS_TGT                    
@@ -246,7 +246,7 @@ su lfs -c '
     --enable-kernel=3.2                
     --with-headers=/tools/include
     && make
-    && make install'
+    && make install"
 
 echo "Test de l'installation ..."
 
@@ -277,7 +277,7 @@ cd build/
 
 echo "Temps de compilation : 0.5 SBU"
 
-su lfs -c '
+su lfs -c "
     ../libstdc++-v3/configure
     --host=$LFS_TGT                 
     --prefix=/tools                 
@@ -287,7 +287,7 @@ su lfs -c '
     --disable-libstdcxx-pch         
     --with-gxx-include-dir=/tools/$LFS_TGT/include/c++/9.2.0
     && make
-    && make install'
+    && make install"
 
 
 cd $LFS/sources/
@@ -304,10 +304,10 @@ cd build/
 
 echo "Temps de compilation : 1.1 SBU"
 
-CC=$LFS_TGT-gcc
-AR=$LFS_TGT-ar
-RANLIB=$LFS_TGT-ranlib
-su lfs -c '
+su lfs -c "CC=$LFS_TGT-gcc"
+su lfs -c "AR=$LFS_TGT-ar"
+su lfs -c "RANLIB=$LFS_TGT-ranlib"
+su lfs -c "
     ../configure                   
     --prefix=/tools            
     --disable-nls              
@@ -315,7 +315,7 @@ su lfs -c '
     --with-lib-path=/tools/lib
     --with-sysroot
     && make
-    && make install'
+    && make install"
 
 su lfs -c 'make -C ld clean'
 su lfs -c 'make -C ld LIB_PATH=/usr/lib:/lib'
@@ -323,3 +323,74 @@ su lfs -c 'cp -v ld/ld-new /tools/bin'
 
 cd $LFS/sources/
 rm -rf binutils-2.32/
+
+
+# GCC (2nd pass)
+
+echo "Compilation de GCC ..."
+su lfs -c 'tar -xf gcc-9.2.0.tar.xz'
+cd gcc-9.2.0/
+
+cat gcc/limitx.h gcc/glimits.h gcc/limity.h > `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include-fixed/limits.h
+for file in gcc/config/{linux,i386/linux{,64}}.h
+do
+    su lfs -c "cp -uv $file{,.orig}"
+    su ldfs -c "sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+        -e 's@/usr@/tools@g' $file.orig > $file"
+    echo '
+    #undef STANDARD_STARTFILE_PREFIX_1
+    #undef STANDARD_STARTFILE_PREFIX_2
+    #define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
+    #define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+    touch $file.orig
+done
+
+case $(uname -m) in
+  x86_64)
+    sed -e '/m64=/s/lib64/lib/' \
+        -i.orig gcc/config/i386/t-linux64
+  ;;
+esac
+
+su lfs -c 'tar -xf ../mpfr-4.0.2.tar.xz'
+su lfs -c 'mv -v mpfr-4.0.2 mpfr'
+su lfs -c 'tar -xf ../gmp-6.1.2.tar.xz'
+su lfs -c 'mv -v gmp-6.1.2 gmp'
+su lfs -c 'tar -xf ../mpc-1.1.0.tar.gz'
+su lfs -c 'mv -v mpc-1.1.0 mpc'
+
+su lfs -c 'mkdir -v build'
+cd build/
+
+echo "Temps de compilation : 15 SBU"
+
+su lfs -c "CC=$LFS_TGT-gcc'"
+su lfs -c "CXX=$LFS_TGT-g++"
+su lfs -c "AR=$LFS_TGT-ar"
+su lfs -c "RANLIB=$LFS_TGT-ranlib"
+su lfs -c "
+    ../configure
+    --prefix=/tools
+    --with-local-prefix=/tools
+    --with-native-system-header-dir=/tools/include
+    --enable-languages=c,c++
+    --disable-libstdcxx-pch
+    --disable-multilib
+    --disable-bootstrap
+    --disable-libgomp
+    && make
+    && make install"
+
+su lfs -c "ln -sv gcc /tools/bin/cc"
+
+su lfs -c "echo 'int main(){}' > dummy.c"
+su lfs -c "cc dummy.c"
+if [ `su lfs -c "readelf -l a.out | grep ': /tools'"` != "[Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2]" ];
+then
+    echo "Installation invalide !";
+    exit 1;
+fi
+
+rm -v dummy.c a.out
+cd $LFS/sources/
+rm -rf gcc-9.2.0/
