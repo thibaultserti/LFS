@@ -125,7 +125,7 @@ echo "Compilation de BINUTILS ...
 su lfs -c 'tar -xf binutils-2.32.tar.xz'
 cd binutils-2.32/
 
-mkdir -v build
+su lfs -c 'mkdir -v build'
 cd build/
 
 su lfs -c 'time { 
@@ -179,7 +179,7 @@ case $(uname -m) in
  ;;
 esac
 
-mkdir -v build
+su lfs -c 'mkdir -v build'
 cd build/
 
 echo "Temps de compilation : 12 SBU"
@@ -213,14 +213,50 @@ cd $LFS/sources/
 rm -rf gcc-9.2.0/
 rm -rf mpfr/ gmp/ mpc/
 
-# Linux Headers
+# LINUX HEADERS
 
 echo "Installation de Linux API Headers ..."
 
-su lfs -c 'tar -xf'
+su lfs -c 'tar -xf linux-5.2.8.tar.xz'
+cd linux-5.2.8/
 su lfs -c 'make mrproper'
 su lfs -c 'make INSTALL_HDR_PATH=dest headers_install'
 su lfs -c 'cp -rv dest/include/* /tools/include'
 
 cd $LFS/sources/
 rm -rf linux-5.2.8/
+
+# GLIBC
+
+su lfs -c 'tar -xf glibc-2.30.tar.xz'
+
+su lfs -c 'mkdir -v build'
+cd build/
+
+su lfs -c '
+    ../configure                            
+    --prefix=/tools                    
+    --host=$LFS_TGT                    
+    --build=$(../scripts/config.guess) 
+    --enable-kernel=3.2                
+    --with-headers=/tools/include
+    && make
+    && make install'
+
+echo "Test de l'installation ..."
+
+su lfs -c 'echo 'int main(){}' > dummy.c'
+su lfs -c '$LFS_TGT-gcc dummy.c'
+
+if [ `su lfs -c "readelf -l a.out | grep ': /tools'"` != "[Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2]" ];
+then
+    echo "Installation invalide !";
+    exit 1;
+fi
+
+echo "Installation validée"
+
+rm -v dummy.c a.out
+
+cd $LFS/sources/
+rm -rf glibc-2.30/
