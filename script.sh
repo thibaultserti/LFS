@@ -110,3 +110,13 @@ echo "export MAKEFLAGS='-j $nb_cores'" >> /home/lfs/.bashrc
 
 
 #su lfs -c 'source ~/.bash_profile'
+
+# ------------ COMPILATION ------------
+
+case $(uname -m) in
+  x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
+esac
+# BINUTILS (27s)
+echo "Compilation de BINUTILS 
+(le temps renvoyé à la fin est une unité caractéristique appelé SBU qui servira d'indicateur pour le temps de compilation des paquets suivants)"
+su lfs -c 'time { ../configure --prefix=/tools --with-sysroot=$LFS --with-lib-path=/tools/lib --target=$LFS_TGT --disable-nls --disable-werror && make && make install; }
