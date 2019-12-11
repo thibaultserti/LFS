@@ -113,10 +113,97 @@ echo "export MAKEFLAGS='-j $nb_cores'" >> /home/lfs/.bashrc
 
 # ------------ COMPILATION ------------
 
+# On assure la propreté de la chaîne d'outil
+
 case $(uname -m) in
   x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
 esac
+
 # BINUTILS (27s)
-echo "Compilation de BINUTILS 
+echo "Compilation de BINUTILS ... 
 (le temps renvoyé à la fin est une unité caractéristique appelé SBU qui servira d'indicateur pour le temps de compilation des paquets suivants)"
-su lfs -c 'time { ../configure --prefix=/tools --with-sysroot=$LFS --with-lib-path=/tools/lib --target=$LFS_TGT --disable-nls --disable-werror && make && make install; }
+su lfs -c 'tar -xf binutils-2.32.tar.xz'
+cd binutils-2.32/
+su lfs -c 'time { 
+    ../configure --prefix=/tools
+    --with-sysroot=$LFS
+    --with-lib-path=/tools/lib
+    --target=$LFS_TGT
+    --disable-nls
+    --disable-werror
+    && make 
+    && make install; }'
+
+rm  -rf binutils-2.32$
+
+# GCC
+
+echo "Compilation de GCC ..."
+su lfs -c 'tar -xf gcc-9.2.0.tar.xz'
+cd gcc-9.2.0/
+
+su lfs -c 'tar -xf ../mpfr-4.0.2.tar.xz'
+su lfs -c 'mv -v mpfr-4.0.2 mpfr'
+su lfs -c 'tar -xf ../gmp-6.1.2.tar.xz'
+su lfs -c 'mv -v gmp-6.1.2 gmp'
+su lfs -c 'tar -xf ../mpc-1.1.0.tar.gz'
+su lfs -c 'mv -v mpc-1.1.0 mpc'
+
+# On redéfinit l'éditeur de liens dynamique par défaut de GCC pour utiliser celui installé dans /tools 
+# On supprime aussi /usr/include du chemin de recherche include de GCC
+
+for file in gcc/config/{linux,i386/linux{,64}}.h
+do
+    su lfs -c 'cp -uv $file{,.orig}'
+    su lfs -c "sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+        -e 's@/usr@/tools@g' $file.orig > $file"
+    echo '
+    #undef STANDARD_STARTFILE_PREFIX_1
+    #undef STANDARD_STARTFILE_PREFIX_2
+    #define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
+    #define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+    touch $file.orig
+done
+
+# On définit lib comme nom de répertoire par défaut pour les bibliothèques 64 bit
+
+case $(uname -m) in
+  x86_64)
+    sed -e '/m64=/s/lib64/lib/' \
+        -i.orig gcc/config/i386/t-linux64
+ ;;
+esac
+
+mkdir -v build
+cd build/
+
+echo "Temps de compilation : 12 SBU"
+
+su lfs -c '
+    ../configure                                   
+    --target=$LFS_TGT                              
+    --prefix=/tools                                
+    --with-glibc-version=2.11                      
+    --with-sysroot=$LFS                            
+    --with-newlib                                  
+    --without-headers                              
+    --with-local-prefix=/tools                     
+    --with-native-system-header-dir=/tools/include 
+    --disable-nls                                  
+    --disable-shared                               
+    --disable-multilib                             
+    --disable-decimal-float                        
+    --disable-threads                              
+    --disable-libatomic                            
+    --disable-libgomp                              
+    --disable-libquadmath                          
+    --disable-libssp                               
+    --disable-libvtv                               
+    --disable-libstdcxx                            
+    --enable-languages=c,c++
+    && make
+    && make install'
+
+rm -rf gcc-9.2.0/
+rm -rf mpfr/ gmp/ mpc/
+
