@@ -52,7 +52,7 @@ echo "Téléchargement en cours ... "
 wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
 cp md5sums $LFS/sources
 pushd "$LFS/sources" || exit
-if [ "$(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)" != "Success" ] && [ "$(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)" != "Réussi" ];
+if [ "$(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)" != " Success" ] && [ "$(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)" != " Réussi" ];
 then 
     echo "Les sommes de contrôles md5 ne correspondent pas !" ;
     popd || exit;
