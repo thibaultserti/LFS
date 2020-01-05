@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# TODO ajouter pause entre chaque compilation
 # ------------ COMPILATION ------------
 
 # On assure la propreté de la chaîne d'outil
@@ -8,11 +9,13 @@ case $(uname -m) in
   x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
 esac
 
+cd "$LFS/sources" || exit
+
 # BINUTILS (27s)
 echo "Compilation de BINUTILS ... 
 (le temps renvoyé à la fin est une unité caractéristique appelé SBU qui servira d'indicateur pour le temps de compilation des paquets suivants)"
 tar -xf binutils-2.32.tar.xz
-cd binutils-2.32 || exit
+cd binutils-2.32/ || exit
 
 mkdir -v build
 cd build/ || exit
@@ -29,6 +32,8 @@ time { ../configure \
 
 cd "$LFS/sources/" || exit 
 rm -rf binutils-2.32
+
+read -pr "Appuyer sur ENTER pour continuer"
 
 # GCC
 
@@ -101,6 +106,8 @@ cd "$LFS/sources/" || exit
 rm -rf gcc-9.2.0/
 rm -rf mpfr/ gmp/ mpc/
 
+read -pr "Appuyer sur ENTER pour continuer"
+
 # LINUX HEADERS
 
 echo "Installation de Linux API Headers ..."
@@ -114,6 +121,8 @@ cp -rv dest/include/* /tools/include
 
 cd "$LFS/sources/" || exit
 rm -rf linux-5.2.8/
+
+read -pr "Appuyer sur ENTER pour continuer"
 
 # GLIBC
 
@@ -153,6 +162,8 @@ rm -v dummy.c a.out
 cd "$LFS/sources/" || exit
 rm -rf glibc-2.30/
 
+read -pr "Appuyer sur ENTER pour continuer"
+
 # LIBSTDC++
 
 echo "Compilation de LIBSTDC++ ..."
@@ -179,6 +190,8 @@ echo "Temps de compilation : 0.5 SBU"
 
 cd "$LFS/sources/" || exit
 rm -rf gcc-9.2.0/
+
+read -pr "Appuyer sur ENTER pour continuer"
 
 # Binutils 2
 
@@ -212,6 +225,7 @@ cp -v ld/ld-new /tools/bin
 cd "$LFS/sources/" || exit
 rm -rf binutils-2.32/
 
+read -pr "Appuyer sur ENTER pour continuer"
 
 # GCC (2nd pass)
 
