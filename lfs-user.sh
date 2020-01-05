@@ -31,7 +31,7 @@ time { ../configure \
         && make install;}
 
 cd "$LFS/sources/" || exit 
-rm -rf binutils-2.32
+rm -rf binutils-2.32/
 
 read -pr "Appuyer sur ENTER pour continuer"
 
@@ -297,3 +297,30 @@ fi
 rm -v dummy.c a.out
 cd "$LFS/sources/" || exit
 rm -rf gcc-9.2.0/
+
+read -pr "Appuyer sur ENTER pour continuer"
+
+# TCL
+
+echo "Compilation de TCL ..."
+
+tar -xf tcl8.6.9-src.tar.gz
+cd tcl8.6.9-src/ || exit
+
+echo "Temps de compilation : 0.9 SBU"
+
+cd unix/ || exit
+./configure \
+--prefix=/tools \
+&& make \
+&& TZ=UTC make test \
+&& make install
+
+chmod -v u+w /tools/lib/libtcl8.6.so
+make install-private-headers
+ln -sv tclsh8.6 /tools/bin/tclsh
+
+cd "$LFS/sources/" || exit
+rm -rf tcl8.6.9-src/
+
+read -pr "Appuyer sur ENTER pour continuer"

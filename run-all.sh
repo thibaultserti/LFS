@@ -107,4 +107,4 @@ done
 
 echo "export MAKEFLAGS='-j $nb_cores'" >> /home/lfs/.bashrc
 
-su lfs -c "bash lfs-user.sh"
+su lfs -c "bash lfs-user.sh" > lfs-user.log
