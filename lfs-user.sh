@@ -324,3 +324,93 @@ cd "$LFS/sources/" || exit
 rm -rf tcl8.6.9-src/
 
 read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# EXPECT
+
+echo "Compilation de EXPECT ..."
+tar -xf expect5.45.4.tar.gz
+cd expect5.45.4/ || exit
+
+echo "Temps de compilation : 0.1 SBU"
+
+cp -v configure{,.orig}
+sed 's:/usr/local/bin:/bin:' configure.orig > configure
+
+./configure           \
+--prefix=/tools       \
+--with-tcl=/tools/lib \
+--with-tclinclude=/tools/include \
+&& make \
+&& make test \
+&& make SCRIPTS="" install
+
+cd "$LFS/sources/" || exit
+rm -rf expect5.45.4/
+
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# DEJA GNU
+
+echo "Compilation de DejaGNU ..."
+tar -xf dejagnu-1.6.2.tar.gz
+cd dejagnu-1.6.2/ || exit
+
+echo "Temps de compilaition : < 0.1 SBU"
+
+./configure \
+--prefix=/tools \
+&& make install \
+&& make check
+
+cd "$LFS/sources/" || exit
+rm -rf dejagnu-1.6.2/
+
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# M4
+
+echo "Compilation de M4 ..."
+tar -xf m4-1.4.18.tar.xz
+cd m4-1.4.18/ || exit
+
+echo "Temps de compilation  : 0.2 SBU"
+
+sed -i 's/IO_ftrylockfile/IO_EOF_SEEN/' lib/*.c
+echo "#define _IO_IN_BACKUP 0x100" >> lib/stdio-impl.h
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+
+cd "$LFS/sources/" || exit
+rm -rf m4-1.4.18/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# NCURSES
+
+echo "Compilation de NCURSES"
+tar -xf ncurses-6.1.tar.gz
+cd ncurses-6.1/ || exit
+
+echo "Temps de compilation : 0.6 SBU"
+sed -i s/mawk// configure
+
+./configure \
+--prefix=/tools \
+--with-shared   \
+--without-debug \
+--without-ada   \
+--enable-widec  \
+--enable-overwrite \
+&& make \
+&& make install
+
+ln -s libncursesw.so /tools/lib/libncurses.so
+
+cd "$LFS/sources/" || exit
+rm -rf ncurses-6.1/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
