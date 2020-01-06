@@ -450,13 +450,13 @@ echo "Temps de compilation : 0.3 SBU"
  && make install
 
 cd "$LFS/sources/" || exit
-rm -rf bash-5.0/
+rm -rf bison-3.4.1/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # BZIP2
 
 echo "Compilation de BZIP2 ..."
-tar -xf bzip2-1.0.8.tar.gz/
+tar -xf bzip2-1.0.8.tar.gz
 cd bzip2-1.0.8/ || exit
 
 echo "Temps de compilation : < 0.1 SBU"
@@ -465,5 +465,60 @@ make \
 && make PREFIX=/tools install
 
 cd "$LFS/sources/" || exit
-rm -rf bash-5.0/
+rm -rf bzip2-1.0.8/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# COREUTILS
+
+echo "Compilation de COREUTILS ..."
+tar -xf coreutils-8.31.tar.xz
+cd coreutils-8.31/ || exit
+
+echo "Temps de compilation : 0.8 SBU"
+
+./configure \
+--prefix=/tools \
+--enable-install-program=hostname \
+&& make \
+&& make RUN_EXPENSIVE_TESTS=yes check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf coreutils-8.31/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# DIFFUTILS
+
+echo "Compilation de DIFFUTILS ..."
+tar -xf diffutils-3.7.tar.xz
+cd diffutils-3.7/ || exit
+
+echo "Temps de compilation : 0.2 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check  \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf diffutils-3.7/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# FILE
+
+echo "Compilation de FILE ..."
+tar -xf file-5.37.tar.gz
+cd file-5.37/ || exit
+
+echo "Temps de compilation : 0.1 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf file-5.37/
 read -r -p "Appuyer sur ENTER pour continuer" enter
