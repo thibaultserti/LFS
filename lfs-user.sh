@@ -33,7 +33,7 @@ time { ../configure \
 cd "$LFS/sources/" || exit 
 rm -rf binutils-2.32/
 
-read -pr "Appuyer sur ENTER pour continuer"
+read -pr "Appuyer sur ENTER pour continuer" enter
 
 # GCC
 
@@ -106,7 +106,7 @@ cd "$LFS/sources/" || exit
 rm -rf gcc-9.2.0/
 rm -rf mpfr/ gmp/ mpc/
 
-read -pr "Appuyer sur ENTER pour continuer"
+read -pr "Appuyer sur ENTER pour continuer" enter
 
 # LINUX HEADERS
 
@@ -122,7 +122,7 @@ cp -rv dest/include/* /tools/include
 cd "$LFS/sources/" || exit
 rm -rf linux-5.2.8/
 
-read -pr "Appuyer sur ENTER pour continuer"
+read -pr "Appuyer sur ENTER pour continuer" enter
 
 # GLIBC
 
@@ -162,7 +162,7 @@ rm -v dummy.c a.out
 cd "$LFS/sources/" || exit
 rm -rf glibc-2.30/
 
-read -pr "Appuyer sur ENTER pour continuer"
+read -pr "Appuyer sur ENTER pour continuer" enter
 
 # LIBSTDC++
 
@@ -191,7 +191,7 @@ echo "Temps de compilation : 0.5 SBU"
 cd "$LFS/sources/" || exit
 rm -rf gcc-9.2.0/
 
-read -pr "Appuyer sur ENTER pour continuer"
+read -pr "Appuyer sur ENTER pour continuer" enter
 
 # Binutils 2
 
@@ -225,7 +225,7 @@ cp -v ld/ld-new /tools/bin
 cd "$LFS/sources/" || exit
 rm -rf binutils-2.32/
 
-read -pr "Appuyer sur ENTER pour continuer"
+read -pr "Appuyer sur ENTER pour continuer" enter
 
 # GCC (2nd pass)
 
@@ -298,7 +298,7 @@ rm -v dummy.c a.out
 cd "$LFS/sources/" || exit
 rm -rf gcc-9.2.0/
 
-read -pr "Appuyer sur ENTER pour continuer"
+read -pr "Appuyer sur ENTER pour continuer" enter
 
 # TCL
 
@@ -323,4 +323,4 @@ ln -sv tclsh8.6 /tools/bin/tclsh
 cd "$LFS/sources/" || exit
 rm -rf tcl8.6.9-src/
 
-read -pr "Appuyer sur ENTER pour continuer"
+read -pr "Appuyer sur ENTER pour continuer" enter
