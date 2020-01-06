@@ -17,7 +17,7 @@ echo "Compilation de BINUTILS ...
 tar -xf binutils-2.32.tar.xz
 cd binutils-2.32/ || exit
 
-mkdir -v build
+mkdir -v build/
 cd build/ || exit
 
 time { ../configure \
@@ -391,7 +391,7 @@ read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # NCURSES
 
-echo "Compilation de NCURSES"
+echo "Compilation de NCURSES ..."
 tar -xf ncurses-6.1.tar.gz
 cd ncurses-6.1/ || exit
 
@@ -414,3 +414,56 @@ cd "$LFS/sources/" || exit
 rm -rf ncurses-6.1/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
+# BASH
+
+echo "Compilation de BASH ..."
+tar -xf bash-5.0.tar.gz
+cd bash-5.0/ || exit
+
+echo "Temps de compilation : 0.2 SBU"
+
+./configure \
+--prefix=/tools \
+--without-bash-malloc \
+&& make \
+&& make tests \
+&& make install
+
+ln -sv bash /tools/bin/sh
+
+cd "$LFS/sources/" || exit
+rm -rf bash-5.0/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# BISON
+
+echo "Compilation de BISON ..."
+tar -xf bison-3.4.1.tar.xz
+cd bison-3.4.1/ || exit
+
+echo "Temps de compilation : 0.3 SBU"
+
+ ./configure \
+ --prefix=/tools \
+ && make \
+ && make check \
+ && make install
+
+cd "$LFS/sources/" || exit
+rm -rf bash-5.0/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# BZIP2
+
+echo "Compilation de BZIP2 ..."
+tar -xf bzip2-1.0.8.tar.gz/
+cd bzip2-1.0.8/ || exit
+
+echo "Temps de compilation : < 0.1 SBU"
+
+make \
+&& make PREFIX=/tools install
+
+cd "$LFS/sources/" || exit
+rm -rf bash-5.0/
+read -r -p "Appuyer sur ENTER pour continuer" enter
