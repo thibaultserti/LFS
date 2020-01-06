@@ -74,7 +74,7 @@ case $(uname -m) in
 esac
 
 mkdir -v build
-cd build/ ||
+cd build/ || exit
 
 echo "Temps de compilation : 12 SBU"
 
