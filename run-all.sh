@@ -21,7 +21,7 @@ echo "Choisissez la partition d'installation de LFS"
 
 while true ;
 do
-    sudo fdisk -l | tail -n +10 | head -n -2 
+    sudo fdisk -l
     echo "Quelle partition voulez vous utiliser pour LFS ? (ATTENTION : toutes les données déjà présentes sur le disque seront effacées ! (Taper /dev/sdxx)"
     read -r partition
     if ! [[ $partition =~ /dev/sd[a-f][1-9] ]];
@@ -52,7 +52,7 @@ echo "Téléchargement en cours ... "
 wget --input-file=wget-list --continue --directory-prefix=$LFS/sources
 cp md5sums $LFS/sources
 pushd "$LFS/sources" || exit
-if [ "$(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)" != " Success" ] && [ "$(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)" != " Réussi" ];
+if [ "$(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)" != " Success" ] && [ "$(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)" != " Réussi" ]&& [ "$(md5sum -c md5sums | tail -n 1 | cut -d ':' -f2)" != " OK" ];
 then 
     echo "Les sommes de contrôles md5 ne correspondent pas !" ;
     popd || exit;
@@ -71,6 +71,7 @@ groupadd lfs
 useradd -s /bin/bash -g lfs -m -k /dev/null lfs
 echo "Définissez un mot de passe pour l'utilisateur LFS :"
 passwd lfs
+chown -v lfs $LFS
 chown -v lfs $LFS/tools
 chown -v lfs $LFS/sources
 
@@ -107,4 +108,4 @@ done
 
 echo "export MAKEFLAGS='-j $nb_cores'" >> /home/lfs/.bashrc
 
-su lfs -c "bash lfs-user.sh" | tee -a lfs-user.log
+#su lfs -c "bash lfs-user.sh" | tee -a lfs-user.log
