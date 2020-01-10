@@ -3,11 +3,9 @@
 # TODO ajouter pause entre chaque compilation
 # ------------ COMPILATION ------------
 
-# On assure la propreté de la chaîne d'outil
 
-case $(uname -m) in
-  x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
-esac
+
+# On assure la propreté de la chaîne d'outil
 
 cd "$LFS/sources" || exit
 
@@ -20,15 +18,20 @@ cd binutils-2.32/ || exit
 mkdir -v build/
 cd build/ || exit
 
-time { ../configure \
-        --prefix=/tools \
-        --with-sysroot="$LFS" \
-        --with-lib-path=/tools/lib \
-        --target="$LFS_TGT" \
-        --disable-nls \
-        --disable-werror \
-        && make \
-        && make install;}
+../configure \
+--prefix=/tools \
+--with-sysroot="$LFS" \
+--with-lib-path=/tools/lib \
+--target="$LFS_TGT" \
+--disable-nls \
+--disable-werror \
+&& make \
+
+case $(uname -m) in
+  x86_64) mkdir -v /tools/lib && ln -sv lib /tools/lib64 ;;
+esac
+
+make install
 
 cd "$LFS/sources/" || exit 
 rm -rf binutils-2.32/
@@ -53,15 +56,15 @@ mv -v mpc-1.1.0 mpc
 
 for file in gcc/config/{linux,i386/linux{,64}}.h
 do
-    cp -uv $file{,.orig}
-    sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
-        -e 's@/usr@/tools@g' $file.orig > $file
-    echo '
-    #undef STANDARD_STARTFILE_PREFIX_1
-    #undef STANDARD_STARTFILE_PREFIX_2
-    #define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
-    #define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
-    touch $file.orig
+  cp -uv $file{,.orig}
+  sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+      -e 's@/usr@/tools@g' $file.orig > $file
+  echo '
+#undef STANDARD_STARTFILE_PREFIX_1
+#undef STANDARD_STARTFILE_PREFIX_2
+#define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
+#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+  touch $file.orig
 done
 
 # On définit lib comme nom de répertoire par défaut pour les bibliothèques 64 bit
