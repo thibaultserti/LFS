@@ -525,3 +525,280 @@ echo "Temps de compilation : 0.1 SBU"
 cd "$LFS/sources/" || exit
 rm -rf file-5.37/
 read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# FINDUTILS
+
+echo "Compilation de FINDUTILS ..."
+tar -xf  findutils-4.6.0.tar.gz
+cd findutils-4.6.0.tar.gz || exit
+
+echo "Temps de compilation : 0.3 SBU"
+
+sed -i 's/IO_ftrylockfile/IO_EOF_SEEN/' gl/lib/*.c
+sed -i '/unistd/a #include <sys/sysmacros.h>' gl/lib/mountlist.c
+echo "#define _IO_IN_BACKUP 0x100" >> gl/lib/stdio-impl.h
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf findutilds-4.6.0.tar.gz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# GAWK
+
+echo "Compilation de GAWK ..."
+tar -xf gawk-5.0.1.tar.xz
+cd gawk-5.0.1.tar.xz/ || exit
+
+echo "Temps de compilation : 0.3 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf gawk-5.0.1.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# GETTEXT
+
+echo "Compilation de GETTEXT ..."
+tar -xf gettext-0.20.1.tar.xz
+cd gettext-0.20.1.tar.xz/ || exit
+
+echo "Temps de compilation : 1.8 SBU"
+
+./configure \
+--disable-shared \
+&& make
+
+cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /tools/bin
+
+
+cd "$LFS/sources/" || exit
+rm -rf gettext-0.20.1.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# GREP
+
+echo "Compilation de GETTEXT ..."
+tar -xf grep-3.3.tar.xz
+cd grep-3.3.tar.xz/ || exit
+
+echo "Temps de compilation : 0.2 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf grep-3.3.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# GZIP
+
+echo "Compilation de GZIP ..."
+tar -xf gzip-1.10.tar.xz
+cd gzip-1.10.tar.xz/ || exit
+
+echo "Temps de compilation : 0.1 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf gzip-1.10.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# MAKE
+
+echo "Compilation de MAKE ..."
+tar -xf make-4.2.1.tar.gz
+cd make-4.2.1.tar.gz/ || exit
+
+echo "Temps de compilation : 0.1 SBU"
+
+sed -i '211,217 d; 219,229 d; 232 d' glob/glob.c
+./configure \
+--prefix=/tools \
+--without-guile \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf make-4.2.1.tar.gz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# PATCH
+
+echo "Compilation de PATCH ..."
+tar -xf patch-2.7.6.tar.xz
+cd patch-2.7.6.tar.xz/ || exit
+
+echo "Temps de compilation : 0.2 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf patch-2.7.6.tar.gz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# PERL
+
+echo "Compilation de PERL ..."
+tar -xf perl-5.30.0.tar.xz
+cd perl-5.30.0.tar.xz/ || exit
+
+echo "Temps de compilation : 1.6 SBU"
+
+sh Configure -des -Dprefix=/tools -Dlibs=-lm -Uloclibpth -Ulocincpth
+make
+cp -v perl cpan/podlators/scripts/pod2man /tools/bin
+mkdir -pv /tools/lib/perl5/5.30.0
+cp -Rv lib/* /tools/lib/perl5/5.30.0
+
+cd "$LFS/sources/" || exit
+rm -rf perl-5.30.0.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# PYTHON
+
+echo "Compilation de PYTHON ..."
+tar -xf Python-3.7.4.tar.xz
+cd Python-3.7.4.tar.xz/ || exit
+
+echo "Temps de compilation : 1.4 SBU"
+
+sed -i '/def add_multiarch_paths/a \        return' setup.py
+./configure \
+--prefix=/tools \
+--without-ensurepip \
+&& make \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf Python-3.7.4.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# SED
+
+echo "Compilation de SED ..."
+tar -xf sed-4.7.tar.xz
+cd sed-4.7.tar.xz/ || exit
+
+echo "Temps de compilation : 0.2 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf sed-4.7.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# TAR
+
+echo "Compilation de TAR ..."
+tar -xf tar-1.32.tar.xz
+cd tar-1.32.tar.xz/ || exit
+
+echo "Temps de compilation : 0.3 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf tar-1.32.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# TEXINFO
+
+echo "Compilation de TEXINFO ..."
+tar -xf texinfo-6.6.tar.xz
+cd texinfo-6.6.tar.xz/ || exit
+
+echo "Temps de compilation : 0.2 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf texinfo-6.6.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# UTIL-LINUX
+
+echo "Compilation de UTIL-LINUX ..."
+tar -xf util-linux-2.34.tar.xz
+cd util-linux-2.34.tar.xz/ || exit
+
+echo "Temps de compilation : 1 SBU"
+
+./configure \
+--prefix=/tools \
+--without-python \
+--disable-makeinstall-chown \
+--without-systemdsystemunitdir \
+--without-ncurses \
+PKG_CONFIG="" \
+&& make \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf util-linux-2.34.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# XZ
+
+echo "Compilation de XZ ..."
+tar -xf xz-5.2.4.tar.xz
+cd xz-5.2.4.tar.xz/ || exit
+
+echo "Temps de compilation : 0.2 SBU"
+
+./configure \
+--prefix=/tools \
+&& make \
+&& make check \
+&& make install
+
+cd "$LFS/sources/" || exit
+rm -rf xz-5.2.4.tar.xz/
+read -r -p "Appuyer sur ENTER pour continuer" enter
+
+# Liébration de l'espace
+
+echo "Nettoyage ..."
+
+strip --strip-debug /tools/lib/*
+/usr/bin/strip --strip-unneeded /tools/{,s}bin/*
+
+rm -rf /tools/{,share}/{info,man,doc}
+
+find /tools/{lib,libexec} -name \*.la -delete
+
+chown -R root:root "$LFS/tools"

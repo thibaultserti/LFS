@@ -12,7 +12,6 @@ LC_ALL=POSIX
 LFS_TGT=$(uname -m)-lfs-linux-gnu
 PATH=/tools/bin:/bin:/usr/bin
 export LFS LC_ALL LFS_TGT PATH
-export LFS="/mnt/lfs"
 EOF
 
 
@@ -31,4 +30,4 @@ do
     
 done
 
-echo "export MAKEFLAGS='-j $nb_cores'" >> /home/lfs/.bashrc
+echo export MAKEFLAGS="'-j $nb_cores'" >> /home/lfs/.bashrc
