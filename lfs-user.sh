@@ -289,7 +289,7 @@ RANLIB="$LFS_TGT-ranlib"
 && make \
 && make install
 
-su lfs -c "ln -sv gcc /tools/bin/cc"
+ln -sv gcc /tools/bin/cc
 
 echo 'int main(){}' > dummy.c
 cc dummy.c
@@ -313,7 +313,7 @@ read -r -p "Appuyer sur ENTER pour continuer" enter
 echo "Compilation de TCL ..."
 
 tar -xf tcl8.6.9-src.tar.gz
-cd tcl8.6.9-src/ || exit
+cd tcl8.6.9/ || exit
 
 echo "Temps de compilation : 0.9 SBU"
 
@@ -329,7 +329,7 @@ make install-private-headers
 ln -sv tclsh8.6 /tools/bin/tclsh
 
 cd "$LFS/sources/" || exit
-rm -rf tcl8.6.9-src/
+rm -rf tcl8.6.9/
 
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
@@ -535,7 +535,7 @@ read -r -p "Appuyer sur ENTER pour continuer" enter
 
 echo "Compilation de FINDUTILS ..."
 tar -xf  findutils-4.6.0.tar.gz
-cd findutils-4.6.0.tar.gz || exit
+cd findutils-4.6.0 || exit
 
 echo "Temps de compilation : 0.3 SBU"
 
@@ -550,14 +550,14 @@ echo "#define _IO_IN_BACKUP 0x100" >> gl/lib/stdio-impl.h
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf findutilds-4.6.0.tar.gz/
+rm -rf findutilds-4.6.0/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # GAWK
 
 echo "Compilation de GAWK ..."
 tar -xf gawk-5.0.1.tar.xz
-cd gawk-5.0.1.tar.xz/ || exit
+cd gawk-5.0.1/ || exit
 
 echo "Temps de compilation : 0.3 SBU"
 
@@ -568,14 +568,14 @@ echo "Temps de compilation : 0.3 SBU"
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf gawk-5.0.1.tar.xz/
+rm -rf gawk-5.0.1/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # GETTEXT
 
 echo "Compilation de GETTEXT ..."
 tar -xf gettext-0.20.1.tar.xz
-cd gettext-0.20.1.tar.xz/ || exit
+cd gettext-0.20.1/ || exit
 
 echo "Temps de compilation : 1.8 SBU"
 
@@ -587,14 +587,14 @@ cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /tools/bin
 
 
 cd "$LFS/sources/" || exit
-rm -rf gettext-0.20.1.tar.xz/
+rm -rf gettext-0.20.1/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # GREP
 
 echo "Compilation de GETTEXT ..."
 tar -xf grep-3.3.tar.xz
-cd grep-3.3.tar.xz/ || exit
+cd grep-3.3/ || exit
 
 echo "Temps de compilation : 0.2 SBU"
 
@@ -605,14 +605,14 @@ echo "Temps de compilation : 0.2 SBU"
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf grep-3.3.tar.xz/
+rm -rf grep-3.3/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # GZIP
 
 echo "Compilation de GZIP ..."
 tar -xf gzip-1.10.tar.xz
-cd gzip-1.10.tar.xz/ || exit
+cd gzip-1.10/ || exit
 
 echo "Temps de compilation : 0.1 SBU"
 
@@ -623,14 +623,14 @@ echo "Temps de compilation : 0.1 SBU"
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf gzip-1.10.tar.xz/
+rm -rf gzip-1.10/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # MAKE
 
 echo "Compilation de MAKE ..."
 tar -xf make-4.2.1.tar.gz
-cd make-4.2.1.tar.gz/ || exit
+cd make-4.2.1/ || exit
 
 echo "Temps de compilation : 0.1 SBU"
 
@@ -643,14 +643,14 @@ sed -i '211,217 d; 219,229 d; 232 d' glob/glob.c
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf make-4.2.1.tar.gz/
+rm -rf make-4.2.1/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # PATCH
 
 echo "Compilation de PATCH ..."
 tar -xf patch-2.7.6.tar.xz
-cd patch-2.7.6.tar.xz/ || exit
+cd patch-2.7.6/ || exit
 
 echo "Temps de compilation : 0.2 SBU"
 
@@ -661,14 +661,14 @@ echo "Temps de compilation : 0.2 SBU"
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf patch-2.7.6.tar.gz/
+rm -rf patch-2.7.6/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # PERL
 
 echo "Compilation de PERL ..."
 tar -xf perl-5.30.0.tar.xz
-cd perl-5.30.0.tar.xz/ || exit
+cd perl-5.30.0/ || exit
 
 echo "Temps de compilation : 1.6 SBU"
 
@@ -679,14 +679,14 @@ mkdir -pv /tools/lib/perl5/5.30.0
 cp -Rv lib/* /tools/lib/perl5/5.30.0
 
 cd "$LFS/sources/" || exit
-rm -rf perl-5.30.0.tar.xz/
+rm -rf perl-5.30.0/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # PYTHON
 
 echo "Compilation de PYTHON ..."
 tar -xf Python-3.7.4.tar.xz
-cd Python-3.7.4.tar.xz/ || exit
+cd Python-3.7.4/ || exit
 
 echo "Temps de compilation : 1.4 SBU"
 
@@ -698,14 +698,14 @@ sed -i '/def add_multiarch_paths/a \        return' setup.py
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf Python-3.7.4.tar.xz/
+rm -rf Python-3.7.4/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # SED
 
 echo "Compilation de SED ..."
 tar -xf sed-4.7.tar.xz
-cd sed-4.7.tar.xz/ || exit
+cd sed-4.7/ || exit
 
 echo "Temps de compilation : 0.2 SBU"
 
@@ -716,14 +716,14 @@ echo "Temps de compilation : 0.2 SBU"
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf sed-4.7.tar.xz/
+rm -rf sed-4.7/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # TAR
 
 echo "Compilation de TAR ..."
 tar -xf tar-1.32.tar.xz
-cd tar-1.32.tar.xz/ || exit
+cd tar-1.32/ || exit
 
 echo "Temps de compilation : 0.3 SBU"
 
@@ -734,14 +734,14 @@ echo "Temps de compilation : 0.3 SBU"
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf tar-1.32.tar.xz/
+rm -rf tar-1.32/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # TEXINFO
 
 echo "Compilation de TEXINFO ..."
 tar -xf texinfo-6.6.tar.xz
-cd texinfo-6.6.tar.xz/ || exit
+cd texinfo-6.6/ || exit
 
 echo "Temps de compilation : 0.2 SBU"
 
@@ -752,14 +752,14 @@ echo "Temps de compilation : 0.2 SBU"
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf texinfo-6.6.tar.xz/
+rm -rf texinfo-6.6/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # UTIL-LINUX
 
 echo "Compilation de UTIL-LINUX ..."
 tar -xf util-linux-2.34.tar.xz
-cd util-linux-2.34.tar.xz/ || exit
+cd util-linux-2.34/ || exit
 
 echo "Temps de compilation : 1 SBU"
 
@@ -774,14 +774,14 @@ PKG_CONFIG="" \
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf util-linux-2.34.tar.xz/
+rm -rf util-linux-2.34/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # XZ
 
 echo "Compilation de XZ ..."
 tar -xf xz-5.2.4.tar.xz
-cd xz-5.2.4.tar.xz/ || exit
+cd xz-5.2.4/ || exit
 
 echo "Temps de compilation : 0.2 SBU"
 
@@ -792,7 +792,7 @@ echo "Temps de compilation : 0.2 SBU"
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf xz-5.2.4.tar.xz/
+rm -rf xz-5.2.4/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # Liébration de l'espace
