@@ -152,6 +152,8 @@ echo "Test de l'installation ..."
 echo 'int main(){}' > dummy.c
 "$LFS_TGT-gcc" dummy.c
 
+readelf -l a.out | grep ': /tools'
+echo " Si vous obtenez Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2, l'installation est validée"
 # if [  "$(readelf -l a.out | grep ': /tools')" != "[Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2]" ];
 # then
 #     echo "Installation invalide !";
@@ -291,6 +293,8 @@ su lfs -c "ln -sv gcc /tools/bin/cc"
 
 echo 'int main(){}' > dummy.c
 cc dummy.c
+readelf -l a.out | grep ': /tools'
+echo " Si vous obtenez Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2, l'installation est validée"
 # if [ "$(readelf -l a.out | grep ': /tools')" != "[Requesting program interpreter: /tools/lib64/ld-linux-x86-64.so.2]" ];
 # then
 #     echo "Installation invalide !";
