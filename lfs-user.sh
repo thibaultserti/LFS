@@ -550,7 +550,7 @@ echo "#define _IO_IN_BACKUP 0x100" >> gl/lib/stdio-impl.h
 && make install
 
 cd "$LFS/sources/" || exit
-rm -rf findutilds-4.6.0/
+rm -rf findutils-4.6.0/
 read -r -p "Appuyer sur ENTER pour continuer" enter
 
 # GAWK
@@ -805,5 +805,3 @@ strip --strip-debug /tools/lib/*
 rm -rf /tools/{,share}/{info,man,doc}
 
 find /tools/{lib,libexec} -name \*.la -delete
-
-chown -R root:root "$LFS/tools"
